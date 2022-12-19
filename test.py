@@ -1,4 +1,6 @@
 from random import randrange
+import time
+
 print(u"{}[2J{}[;H".format(chr(27), chr(27)))
 
 
@@ -9,9 +11,23 @@ def blackjack():
 
 
 def print_intro():
-    print("------ Velkommen til Blackjack ! -----")
-    print("   Blackjack er et kasinospill som spilles med kort. \n   Målet med spillet er å trekke kort som i sum blir så nærme 21 som mulig. \n   Dersom du får over 21, 'buster' du. \n   Alle bildekort teller som 10 poeng. \n   'A' teller 1 eller 11 poeng. \n   Alle andre kort tilsvarer deres numeriske verdi. \n   ")
+    print("   -=-=-=-=-=- Velkommen til Blackjack ! -=-=-=-=-=-")
+    time.sleep(1)
+    print("      Blackjack er et kasinospill som spilles med kort.")
+    time.sleep(1.5)
+    print("   Målet med spillet er å trekke kort som i sum blir så nærme 21 som mulig.")
+    time.sleep(1.5)
+    print("   Dersom du får over 21, taper du. ")
+    time.sleep(1.5)
+    print("   Alle bildekort teller som 10 poeng.")
+    time.sleep(1.5)
+    print("   'A' teller 1 eller 11 poeng.")
+    time.sleep(1.5)
+    print("    Alle andre kort tilsvarer deres numeriske verdi. \n  ")
+    time.sleep(1.5)
     print("Først er det din tur:")
+    time.sleep(1.5)
+
     return None
 
 
