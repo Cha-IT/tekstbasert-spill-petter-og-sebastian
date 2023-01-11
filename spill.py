@@ -1,100 +1,101 @@
+import random
 import time
-import random as r
-
-print(u"{}[2J{}[;H".format(chr(27), chr(27)))
 
 
-# class Spiller:
-#     def __init__(self, navn, balanse):
-#         self.navn = navn
-#         self.balanse(balanse)
+class Spiller:
+    def __init__(self):
+        self.penger = 1000
+        self.hånd = []
 
-#     def balanse(self, balanse):
-#         self.new_method(balanse)
+    def vedd(self, beløp):
+        if beløp > self.penger:
+            print("Du har ikke nok penger!")
+            return False
+        self.penger -= beløp
+        return True
 
-#     def new_method(self, balanse):
-#         self.balanse = balanse
+    def vinner(self, beløp):
+        self.penger += beløp
 
-#     def visInfo(self):
-#         return print(f"\n Hei {self.navn}. Du har {self.balanse} kroner å spille med.")
+    def dør(self):
+        print("Du er død. Spillet er over.")
+        return False
 
-
-# spillernavn = input(str("Velg et navn: "))
-
-# spiller = Spiller(spillernavn, 1000)
-
-# spiller.visInfo()
-
-# time.sleep(1)
-
-# spiller_balanse = spiller.balanse
+    def fri(self):
+        print("\n\nGratulerer! Du har vunnet spillet og er løslatt. \n ---------------------\nDu kommer deg trygt hjem til familien, med ingen minner om at noe av dette har skjedd. ---------------------\n\n")
+        return False
 
 
-def myntkast():
-    playing = True
+class Blackjack:
+    def __init__(self):
+        self.kortstokk = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11] * 4
+        self.dealer_hånd = []
 
-    poeng = 0
-
-    while playing == True:
-        print("\n\nPrøv å gjett det riktige nummeret (fra 1 til 10).")
-        nummer = r.randint(1, 10)
-        time.sleep(0.5)
-        valgtnummer = int(input("\n Skriv et nummer mellom 1 og 10 \n: "))
-        time.sleep(0.5)
-        print(f"\nDu valgte {valgtnummer}.")
+    def spill(self, spiller):
+        print("\nHei.")
         time.sleep(1)
-        if valgtnummer == nummer:
-            print(f"\nNummeret var {nummer}! Du vant!")
-            poeng += 1
+        print("I dette spillet har du blitt kidnappet og er fanget i en kasino. Målet er å tjene penger til organisjonen som kidnappet deg..")
+        time.sleep(5)
+        print("Du må vinne i blackjack, men vær forsiktig.. ")
+        time.sleep(2)
+        print("Dersom du mister alle pengene dine blir du aldri sluppet fri.")
+        time.sleep(3)
+        print("Du har fått 1000 dollar fra organisasjonen.")
+        time.sleep(1.5)
+        print("Dersom du klarer å gamble deg til 2000 dollar, blir du sluppet fri.")
+        time.sleep(3)
 
+        while spiller.penger < 2000:
+            if spiller.penger == 0:
+                return spiller.dør()
+            print("\n\nDine penger: $" + str(spiller.penger))
+            beløp = int(input("\nHvor mye vil du vedde? "))
+            if not spiller.vedd(beløp):
+                continue
+            spiller.hånd = [random.choice(
+                self.kortstokk), random.choice(self.kortstokk)]
+            print("\nDu har fått utdelt: " + str(spiller.hånd))
+            self.dealer_hånd = [random.choice(
+                self.kortstokk), random.choice(self.kortstokk)]
+            print("Dealeren viser: " + str(self.dealer_hånd[0]))
             time.sleep(1)
-            print(f"\nDu har nå {poeng} poeng.")
-            time.sleep(2)
+            while True:
+                valg = input(
+                    "\nVil du ta (k)ort eller (s)tå? \n Dersom du trenger en forklaring på hvordan blackjack fungerer, skriv 'hjelp'.\n: ")
+                if valg == "k":
+                    spiller.hånd.append(random.choice(self.kortstokk))
+                    print("\nDu har: " + str(spiller.hånd))
+                    if sum(spiller.hånd) > 21:
+                        print("\nDu har tapt spillet.\n")
+                        time.sleep(1)
+                        return spiller.dør()
+                elif valg == "s":
+                    break
+                else:
+                    print("\n-----------------------\nHer er en kort forklaring: \n\n\nBlackjack starter med at spilleren og dealeren får utdelt to kort hver. \nKortene til dealeren er plassert på bordet, det ene kortet med bildesiden ned, og den andre med bildesiden opp. \nSpilleren skal velge om han ønsker å få flere kort eller å beholde kortene som er utdelt. \nNår dette er bestemt og spilleren er komfortabel med sine kort, snur dealeren det siste kortet på bordet og avslører vinneren. \n\nHer har du en kort oppsummering av noen Blackjack spilleregler: \n - A er verdt enten 11 eller 1.\n - Konge, dame og knekt er verdt 10\n - Tallkort har samme verdi som kortet. \n - Spilleren starter alltid med to kort. \n - Er kortene over 21 har du tapt. \n - Om dealeren får 17 eller høyere må han stå. \n - Spilleren kan vinne på flere måter: \n    1. 'Ekte blackjack': A + et bildekort som de to første kortene\n    2. Oppnå høyere hånd enn dealeren \n    3. Hvis spillerens hånd er under 21, mens dealerens går over.\n-----------------------")
 
-        elif valgtnummer != nummer and valgtnummer in range(11):
-            print(
-                f"\nNummeret var {nummer}. Du tapte og mistet alle poengene.")
-            poeng = 0
-
+                time.sleep(1)
+            while sum(self.dealer_hånd) < 17:
+                self.dealer_hånd.append(random.choice(self.kortstokk))
+            if sum(self.dealer_hånd) > 21:
+                print("\nDealeren har tapt. Du vinner!")
+                spiller.vinner(beløp * 2)
+            elif sum(spiller.hånd) > sum(self.dealer_hånd):
+                print("\nDu vinner!")
+                spiller.vinner(beløp * 2)
+            elif sum(spiller.hånd) == sum(self.dealer_hånd):
+                print("\nUavgjort.")
+                spiller.vinner(beløp)
+            else:
+                print("\nDu taper.")
             time.sleep(1)
-            print(f"\nDu har nå {poeng} poeng.")
-            time.sleep(2)
-        else:
-            print(f"\nDu skrev ikke inn et nummer mellom 1 og 10. Prøv igjen.")
-        myntigjen = input(f"\nVil du spille igjen? (Ja [J] eller Nei [N]\n: ")
-
-        if myntigjen.lower() == "nei" or "n":
-            break
-
-        elif myntigjen.lower() != "ja" or myntigjen.lower() != "j" and myntigjen.lower() != "nei" or myntigjen.lower() != "n":
-            time.sleep(1)
-            print(f"Du skrev ikke enten ja eller nei.")
-
-        else:
-            print(f"Starter spillet på nytt ... ")
+        return spiller.fri()
 
 
-myntkast()
+def hovedprogram():
+    spiller = Spiller()
+    spill = Blackjack()
+    spill.spill(spiller)
 
 
-# def main():
-#     while spiller_balanse > 0:
-#         action = input(
-#             "\n Hva vil du gjøre? \n(Skriv 'hjelp' eller 'h' for å få en liste av ting du kan gjøre) \n: ")
-
-#         if action.lower() == "hjelp" or "h":
-#             print("\n Ting du kan gjøre:")
-#             print("- BJ: Spill blackjack")
-#             print("- Q: Quit game\n")
-
-#         if action.lower() == "bj" or "blackjack":
-#             bet = input(
-#                 f"Hvor mye vil du legge inn? \n   Du har {spiller_balanse} kroner.")
-#         else:
-#             break
-
-#             # BLACKJACK
-
-# time.sleep(1.5)
-
-# main()
+hovedprogram()
